@@ -1,0 +1,465 @@
+
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://alcdn.msauth.net/browser/2.38.0/js/msal-browser.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.17.4/xlsx.full.min.js"></script>
+    <title>Daily Machine Maintenance</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            background-color: #f9f9f9;
+        }
+
+        .container {
+            width: 90%;
+            max-width: 600px;
+            background-color: #fff;
+            padding: 20px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            border-radius: 8px;
+        }
+
+        .step {
+            display: none;
+        }
+
+            .step.active {
+                display: block;
+            }
+
+        .progress-bar {
+            width: 100%;
+            background-color: #f3f3f3;
+            border: 1px solid #ccc;
+            margin-bottom: 20px;
+            border-radius: 8px;
+            overflow: hidden;
+        }
+
+        .progress-bar-fill {
+            height: 20px;
+            width: 0;
+            background-color: #4caf50;
+            text-align: center;
+            line-height: 20px;
+            color: white;
+        }
+
+        button {
+            display: block;
+            width: 100%;
+            padding: 10px;
+            margin: 10px 0;
+            background-color: #4caf50;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+
+            button:hover {
+                background-color: #45a049;
+            }
+
+            button:disabled {
+                background-color: #ccc;
+                cursor: not-allowed;
+            }
+
+        .completion-info {
+            margin-top: 10px;
+            font-size: 14px;
+            color: #555;
+        }
+
+        .image-container {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+            .image-container img {
+                max-width: 100%;
+                height: auto;
+                border-radius: 8px;
+            }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div id="start-page" class="step active">
+            <div class="image-container">
+                <img src="https://naecoptyltd.sharepoint.com/sites/NaecoWorkshop/Shared%20Documents/Maintenance/Weekly%20Machine%20Maintenance/naeco-logo.png" alt="NAECO Power & Thermal Solutions">
+            </div>
+            <h2>Daily Machine Maintenance Procedure</h2>
+            <label for="user-name">Enter your name:</label>
+            <input type="text" id="user-name" autofocus>
+            <button onclick="startProcedure()">Start</button>
+        </div>
+        <div class="progress-bar">
+            <div id="progress-bar-fill" class="progress-bar-fill">0%</div>
+        </div>
+        <div id="step1" class="step">
+            <h2>Step 1: L1</h2>
+            <p>Details of L1...</p>
+            <label>
+                <input type="checkbox" id="checkbox-1" onclick="toggleNextButton(1)">
+                Fill oil
+            </label>
+            <button id="next-button-1" onclick="nextStep(1)" disabled>Complete Step 1</button>
+            <button onclick="previousStep(1)">Back</button>
+            <div id="completion-info-1" class="completion-info"></div>
+        </div>
+        <div id="step2" class="step">
+            <h2>Step 2: V3</h2>
+            <p>Details of V3...</p>
+            <label>
+                <input type="checkbox" id="checkbox-2" onclick="toggleNextButton(2)">
+                Fill oil
+            </label>
+            <button id="next-button-2" onclick="nextStep(2)" disabled>Complete Step 2</button>
+            <button onclick="previousStep(2)">Back</button>
+            <div id="completion-info-2" class="completion-info"></div>
+        </div>
+        <div id="step3" class="step">
+            <h2>Step 3: V4</h2>
+            <p>Details of V4...</p>
+            <label>
+                <input type="checkbox" id="checkbox-3" onclick="toggleNextButton(3)">
+                Fill oil
+            </label>
+            <button id="next-button-3" onclick="nextStep(3)" disabled>Complete Step 3</button>
+            <button onclick="previousStep(3)">Back</button>
+            <div id="completion-info-3" class="completion-info"></div>
+        </div>
+        <div id="step4" class="step">
+            <h2>Step 4: V5</h2>
+            <p>Details of V5...</p>
+            <label>
+                <input type="checkbox" id="checkbox-4" onclick="toggleNextButton(4)">
+                Fill oil
+            </label>
+            <button id="next-button-4" onclick="nextStep(4)" disabled>Complete Step 4</button>
+            <button onclick="previousStep(4)">Back</button>
+            <div id="completion-info-4" class="completion-info"></div>
+        </div>
+        <div id="step5" class="step">
+            <h2>Step 5: V6</h2>
+            <p>Details of V6...</p>
+            <label>
+                <input type="checkbox" id="checkbox-5" onclick="toggleNextButton(5)">
+                Fill oil
+            </label>
+            <button id="next-button-5" onclick="nextStep(5)" disabled>Complete Step 5</button>
+            <button onclick="previousStep(5)">Back</button>
+            <div id="completion-info-5" class="completion-info"></div>
+        </div>
+        <div id="step6" class="step">
+            <h2>Step 6: V7</h2>
+            <p>Details of V7...</p>
+            <label>
+                <input type="checkbox" id="checkbox-6" onclick="toggleNextButton(6)">
+                Fill oil
+            </label>
+            <button id="next-button-6" onclick="nextStep(6)" disabled>Complete Step 6</button>
+            <button onclick="previousStep(6)">Back</button>
+            <div id="completion-info-6" class="completion-info"></div>
+        </div>
+        <div id="step7" class="step">
+            <h2>Step 7: V9</h2>
+            <p>Details of V9...</p>
+            <label>
+                <input type="checkbox" id="checkbox-7" onclick="toggleNextButton(7)">
+                Fill oil
+            </label>
+            <button id="next-button-7" onclick="nextStep(7)" disabled>Complete Step 7</button>
+            <button onclick="previousStep(7)">Back</button>
+            <div id="completion-info-7" class="completion-info"></div>
+        </div>
+        <div id="step8" class="step">
+            <h2>Step 8: V10</h2>
+            <p>Details of V10...</p>
+            <label>
+                <input type="checkbox" id="checkbox-8" onclick="toggleNextButton(8)">
+                Fill oil
+            </label>
+            <button id="next-button-8" onclick="nextStep(8)" disabled>Complete Step 8</button>
+            <button onclick="previousStep(8)">Back</button>
+            <div id="completion-info-8" class="completion-info"></div>
+        </div>
+        <div id="step9" class="step">
+            <h2>Step 9: V11</h2>
+            <p>Details of V11...</p>
+            <label>
+                <input type="checkbox" id="checkbox-9" onclick="toggleNextButton(9)">
+                Fill oil
+            </label>
+            <button id="next-button-9" onclick="nextStep(9)" disabled>Complete Step 9</button>
+            <button onclick="previousStep(9)">Back</button>
+            <div id="completion-info-9" class="completion-info"></div>
+        </div>
+        <div id="step10" class="step">
+            <h2>Step 10: V12</h2>
+            <p>Details of V12...</p>
+            <label>
+                <input type="checkbox" id="checkbox-10" onclick="toggleNextButton(10)">
+                Fill oil
+            </label>
+            <button id="next-button-10" onclick="nextStep(10)" disabled>Complete Step 10</button>
+            <button onclick="previousStep(10)">Back</button>
+            <div id="completion-info-10" class="completion-info"></div>
+        </div>
+        <div id="step11" class="step">
+            <h2>Step 11: V14</h2>
+            <p>Details of V14...</p>
+            <label>
+                <input type="checkbox" id="checkbox-11" onclick="toggleNextButton(11)">
+                Fill oil
+            </label>
+            <button id="next-button-11" onclick="nextStep(11)" disabled>Complete Step 11</button>
+            <button onclick="previousStep(11)">Back</button>
+            <div id="completion-info-11" class="completion-info"></div>
+        </div>
+        <div id="step12" class="step">
+            <h2>Step 12: V15</h2>
+            <p>Details of V15...</p>
+            <label>
+                <input type="checkbox" id="checkbox-12" onclick="toggleNextButton(12)">
+                Fill oil
+            </label>
+            <button id="next-button-12" onclick="nextStep(12)" disabled>Complete Step 12</button>
+            <button onclick="previousStep(12)">Back</button>
+            <div id="completion-info-12" class="completion-info"></div>
+        </div>
+        <div id="step13" class="step">
+            <h2>Step 13: V16</h2>
+            <p>Details of V16...</p>
+            <label>
+                <input type="checkbox" id="checkbox-13" onclick="toggleNextButton(13)">
+                Fill oil
+            </label>
+            <button id="next-button-13" onclick="nextStep(13)" disabled>Complete Step 13</button>
+            <button onclick="previousStep(13)">Back</button>
+            <div id="completion-info-13" class="completion-info"></div>
+        </div>
+        <div id="step14" class="step">
+            <h2>Step 14: V17</h2>
+            <p>Details of V17...</p>
+            <label>
+                <input type="checkbox" id="checkbox-14" onclick="toggleNextButton(14)">
+                Fill oil
+            </label>
+            <button id="next-button-14" onclick="nextStep(14)" disabled>Complete Step 14</button>
+            <button onclick="previousStep(14)">Back</button>
+            <div id="completion-info-14" class="completion-info"></div>
+        </div>
+        <div id="step15" class="step">
+            <h2>Step 15: V18</h2>
+            <p>Details of V18...</p>
+            <label>
+                <input type="checkbox" id="checkbox-15" onclick="toggleNextButton(15)">
+                Fill oil
+            </label>
+            <button id="next-button-15" onclick="nextStep(15)" disabled>Complete Step 15</button>
+            <button onclick="previousStep(15)">Back</button>
+            <div id="completion-info-15" class="completion-info"></div>
+        </div>
+        <div id="step16" class="step">
+            <h2>Step 16: V19</h2>
+            <p>Details of V19...</p>
+            <label>
+                <input type="checkbox" id="checkbox-16" onclick="toggleNextButton(16)">
+                Fill oil
+            </label>
+            <button id="next-button-16" onclick="nextStep(16)" disabled>Complete Step 16</button>
+            <button onclick="previousStep(16)">Back</button>
+            <div id="completion-info-16" class="completion-info"></div>
+        </div>
+        <div id="summary-page" class="step">
+            <h2>Summary</h2>
+            <p>All steps have been completed successfully!</p>
+            <button onclick="submitProcedure()">Submit</button>
+        </div>
+        <div id="submitted-page" class="step">
+            <h2>Summary</h2>
+            <p>Submitted successfully!</p>
+            <button onclick="resetForm()">Reset</button>
+        </div>
+    </div>
+    <script>
+        let userName = '';
+        const msalConfig = {
+            auth: {
+                clientId: "4f3c7316-febc-4e2b-8f54-688abc3353bc",
+                authority: "https://login.microsoftonline.com/dde88da3-4491-4706-9add-fa35b795b822",
+                redirectUri: window.location.href = "https://naecoptyltd.sharepoint.com/sites/NaecoProgramming/SiteAssets/Daily%20Machine%20Maintenance.html"
+            }
+        };
+
+        const msalInstance = new msal.PublicClientApplication(msalConfig);
+        let accessToken;
+
+        async function signIn() {
+            try {
+                const loginResponse = await msalInstance.loginPopup({
+                    scopes: ["Files.ReadWrite", "User.Read", "Sites.ReadWrite.All"]
+                });
+                console.log("User signed in:", loginResponse.account);
+                accessToken = await getToken();
+            } catch (err) {
+                console.error("Login error:", err);
+            }
+        }
+
+        async function getToken() {
+            const account = msalInstance.getAllAccounts()[0];
+            const response = await msalInstance.acquireTokenSilent({
+                scopes: ["Files.ReadWrite", "User.Read", "Sites.ReadWrite.All"],
+                account
+            });
+            return response.accessToken;
+        }
+        async function startProcedure() {
+            userName = document.getElementById('user-name').value;
+            if (userName.trim() === '') {
+                alert('Please enter your name to start.');
+                return;
+            }
+
+            await signIn(); // ← Authenticate with Microsoft
+            document.getElementById('start-page').classList.remove('active');
+            document.getElementById('step1').classList.add('active');
+            updateProgressBar(0);
+        }
+
+        function submitProcedure() {
+            document.getElementById('summary-page').classList.remove('active');
+            document.getElementById('submitted-page').classList.add('active');
+            downloadExcel();
+        }
+
+        function nextStep(currentStep) {
+            const date = new Date().toLocaleString();
+            document.getElementById('completion-info-' + currentStep).textContent = `Completed by ${userName} on ${date}`;
+
+            document.getElementById('step' + currentStep).classList.remove('active');
+            const nextStep = currentStep + 1;
+            const nextStepElement = document.getElementById('step' + nextStep);
+            if (nextStepElement) {
+                nextStepElement.classList.add('active');
+            } else {
+                document.getElementById('summary-page').classList.add('active');
+            }
+            updateProgressBar(nextStep - 1);
+        }
+
+        function previousStep(currentStep) {
+            document.getElementById('step' + currentStep).classList.remove('active');
+            const previousStep = currentStep - 1;
+            const previousStepElement = document.getElementById('step' + previousStep);
+            if (previousStepElement) {
+                previousStepElement.classList.add('active');
+            } else {
+                document.getElementById('start-page').classList.add('active');
+            }
+            updateProgressBar(previousStep - 1);
+        }
+
+        function updateProgressBar(step) {
+            const totalSteps = 16;
+            const progress = (step / totalSteps) * 100;
+            const progressBarFill = document.getElementById('progress-bar-fill');
+            progressBarFill.style.width = progress + '%';
+            progressBarFill.textContent = Math.round(progress) + '%';
+        }
+
+        function resetForm() {
+            document.querySelectorAll('.step').forEach(step => step.classList.remove('active'));
+            document.querySelectorAll('input[type="checkbox"]').forEach(checkbox => checkbox.checked = false);
+            document.querySelectorAll('.completion-info').forEach(info => info.textContent = '');
+            document.getElementById('user-name').value = '';
+            document.getElementById('start-page').classList.add('active');
+            updateProgressBar(0);
+        }
+
+        function toggleNextButton(step) {
+            const checkbox = document.getElementById('checkbox-' + step);
+            const nextButton = document.getElementById('next-button-' + step);
+            nextButton.disabled = !checkbox.checked;
+        }
+        async function getSiteId(token) {
+            const response = await fetch("https://graph.microsoft.com/v1.0/sites/naecoptyltd.sharepoint.com:/sites/NaecoWorkshop", {
+                headers: { Authorization: `Bearer ${token}` }
+            });
+            const data = await response.json();
+            return data.id;
+        }
+        async function getDriveId(token, siteId) {
+            const response = await fetch(`https://graph.microsoft.com/v1.0/sites/${siteId}/drives`, {
+                headers: { Authorization: `Bearer ${token}` }
+            });
+            const data = await response.json();
+            return data.value.find(drive => drive.name === "Documents").id;
+        }
+        async function getFileMetadata(token, siteId, driveId) {
+            const filePath = "Maintenance/Weekly Machine Maintenance/Daily Machine Maintenance.html";
+            const response = await fetch(`https://graph.microsoft.com/v1.0/sites/${siteId}/drives/${driveId}/root:/${filePath}`, {
+                headers: { Authorization: `Bearer ${token}` }
+            });
+            return await response.json();
+        }
+        async function downloadExcel() {
+            const siteId = await getSiteId(accessToken);
+            const driveId = await getDriveId(accessToken, siteId);
+            const fileName = "Weekly_Maintenance_Procedure_" + new Date().toISOString().split('T')[0] + ".xlsx";
+            const folderPath = "Maintenance/Weekly Machine Maintenance"; // Make sure this matches the folder structure in SharePoint
+            const filePath = `${folderPath}/${fileName}`;
+
+            // Prepare data to be uploaded
+            const wb = XLSX.utils.book_new();
+            const ws_data = [['User Name', 'Date'], [userName, new Date().toLocaleString()]];
+            const ws = XLSX.utils.aoa_to_sheet(ws_data);
+            XLSX.utils.book_append_sheet(wb, ws, "Sheet1");
+
+            // Convert workbook to binary blob
+            const wbout = XLSX.write(wb, { bookType: 'xlsx', type: 'array' });
+            const blob = new Blob([wbout], { type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" });
+
+            // Upload using PUT to the SharePoint file path
+            const uploadUrl = `https://graph.microsoft.com/v1.0/sites/${siteId}/drives/${driveId}/root:/${filePath}:/content`;
+
+            try {
+                const uploadResponse = await fetch(uploadUrl, {
+                    method: "PUT",
+                    headers: {
+                        Authorization: `Bearer ${accessToken}`,
+                        "Content-Type": "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+                    },
+                    body: blob
+                });
+
+                if (!uploadResponse.ok) {
+                    const errorText = await uploadResponse.text();
+                    throw new Error(`Upload failed: ${uploadResponse.status} - ${errorText}`);
+                }
+
+                alert("Excel file uploaded successfully to SharePoint!");
+            } catch (err) {
+                console.error("Upload error:", err);
+                alert("There was an error uploading the Excel file: " + err.message);
+            }
+        }
+    </script>
+</body>
+</html>
